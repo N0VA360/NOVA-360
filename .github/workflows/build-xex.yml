@@ -37,22 +37,19 @@ jobs:
           PREFIX: ${{ runner.temp }}/xsdk-gcc
           WORK: ${{ runner.temp }}/xsdk-gcc-work
           JOBS: "2"
-        run: tools/toolchain/build.sh
-
-      - name: Build xsdk and its host shader compiler
-        working-directory: xsdk
-        env:
-          PATH: ${{ runner.temp }}/xsdk-gcc/bin:${{ env.PATH }}
         run: |
-          make -j2
+          tools/toolchain/build.sh
+          echo "$PREFIX/bin" >> "$GITHUB_PATH"
+
+      - name: Build xsdk and its host tools
+        working-directory: xsdk
+        run: make -j2
 
       - name: Configure and build NOVA 360
-        env:
-          PATH: ${{ runner.temp }}/xsdk-gcc/bin:${{ env.PATH }}
         run: |
           cmake -S . -B build-nova -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE="$GITHUB_WORKSPACE/xsdk/cmake/xsdk.cmake" \
-            -DXSDK_TOOLCHAIN="${{ runner.temp }}/xsdk-gcc"
+            -DXSDK_TOOLCHAIN="$RUNNER_TEMP/xsdk-gcc"
           cmake --build build-nova --verbose
 
       - name: Upload XEX artifact

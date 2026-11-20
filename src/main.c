@@ -100,8 +100,9 @@ static void log_checks(void)
 static uint32_t frame_pixel(uint32_t address, uint32_t width, uint32_t height,
                             uint32_t x, uint32_t y)
 {
+    (void)height;
     XsdkTexture frame;
-    if (width > MAX_WIDTH ||
+    if (width > MAX_WIDTH || y >= height || x >= width ||
         !NT_SUCCESS(xsdk_texture_init(&frame, XSDK_FORMAT_A8R8G8B8, width, height, 1, true)))
         return 0;
 

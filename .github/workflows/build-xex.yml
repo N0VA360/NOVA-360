@@ -7,6 +7,7 @@ on:
     paths:
       - "CMakeLists.txt"
       - "src/**"
+      - "third_party/**"
       - ".github/workflows/build-xex.yml"
 
 permissions:
@@ -30,6 +31,13 @@ jobs:
         with:
           repository: xenosworks/xsdk
           path: xsdk
+
+      - name: Checkout imgui-xenon
+        uses: actions/checkout@v4
+        with:
+          repository: xenosworks/imgui-xenon
+          ref: xenon
+          path: third_party/imgui-xenon
 
       - name: Build Xbox 360 cross-toolchain
         working-directory: xsdk
